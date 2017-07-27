@@ -1,0 +1,50 @@
+ buildscript {
+    repositories {
+         maven {
+		 	url "https://plugins.gradle.org/m2/"
+		 }
+    }
+    dependencies {
+        classpath 'io.franzbecker:gradle-lombok:1.8'
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.0.RELEASE'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'io.franzbecker.gradle-lombok'
+apply plugin: 'io.spring.dependency-management'
+
+ext {
+	jdkVersion = 1.8
+	logbackExtSpringVersion = '0.1.4'
+}
+	
+sourceCompatibility = jdkVersion
+targetCompatibility = jdkVersion
+
+repositories {
+    jcenter()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'io.spring.platform:platform-bom:Brussels-SR2'
+    }
+}
+	    
+dependencies {
+	
+   	// logging
+   	compile "ch.qos.logback:logback-classic"
+    compile "org.slf4j:jcl-over-slf4j"
+    compile "org.logback-extensions:logback-ext-spring:$logbackExtSpringVersion"
+    compile "org.codehaus.janino:janino:"
+    
+	// spring
+	compile('org.springframework:spring-context') {
+        exclude module: 'commons-logging:commons-logging'
+    }
+        
+    testCompile 'junit:junit:4.12'
+}
